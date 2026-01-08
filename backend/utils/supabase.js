@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+<<<<<<< HEAD
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -19,3 +20,17 @@ if (!supabaseUrl || !supabaseKey) {
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey || supabaseKey);
+=======
+
+dotenv.config();
+
+export const supabase = createClient(
+  "https://xwkrbhadnpnkbjiyzbvh.supabase.co",
+ "sb_publishable_x3r1xyeLxuQ76pfjqwkwNQ_9vfNeYr5"
+);
+
+export const supabaseAdmin = createClient(
+  "https://xwkrbhadnpnkbjiyzbvh.supabase.co",
+  "sb_publishable_x3r1xyeLxuQ76pfjqwkwNQ_9vfNeYr5"
+);
+>>>>>>> b2682ac6e781bf09ca869f12e70fbc2bbffda57c

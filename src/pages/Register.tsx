@@ -22,8 +22,13 @@ export default function Register() {
       return;
     }
 
+<<<<<<< HEAD
     if (password.length < 4) {
       setError('Password must be at least 4 characters');
+=======
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+>>>>>>> b2682ac6e781bf09ca869f12e70fbc2bbffda57c
       return;
     }
 
