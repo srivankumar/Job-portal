@@ -174,4 +174,14 @@ export const applicationApi = {
     );
     return handleResponse(response);
   },
+
+  getResumeDownloadUrl: async (key: string) => {
+    const response = await fetch(
+      `${API_URL}/applications/download/${encodeURIComponent(key)}`,
+      {
+        headers: getAuthHeader(),
+      }
+    );
+    return handleResponse(response);
+  },
 };

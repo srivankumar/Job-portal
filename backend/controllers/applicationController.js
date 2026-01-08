@@ -1,5 +1,5 @@
 import { supabase } from '../utils/supabase.js';
-import { uploadToWasabi } from '../services/wasabi.js';
+import { uploadToWasabi, getResumeUrl } from '../services/wasabi.js';
 import { extractResumeText, calculateAdvancedATSScore, updateATSInSupabase } from '../services/gemini-ats.js';
 
 export const applyForJob = async (req, res) => {
@@ -192,5 +192,44 @@ export const getTopCandidates = async (req, res) => {
   } catch (error) {
     console.error('Get top candidates error:', error);
     res.status(500).json({ error: 'Failed to fetch top candidates' });
+  }
+};
+
+export const downloadResume = async (req, res) => {
+  try {
+    const key = decodeURIComponent(req.params.key);
+
+    if (!key) {
+      return res.status(400).json({ error: 'Resume key is required' });
+    }
+
+    const { data: application, error } = await supabase
+      .from('applications')
+      .select('id, user_id, resume_url')
+      .eq('resume_url->>key', key)
+      .maybeSingle();
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    if (!application) {
+      return res.status(404).json({ error: 'Resume not found' });
+    }
+
+    if (req.user.role !== 'admin' && application.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const signedUrl = getResumeUrl(key);
+
+    if (!signedUrl) {
+      return res.status(500).json({ error: 'Failed to generate download link' });
+    }
+
+    res.json({ url: signedUrl });
+  } catch (error) {
+    console.error('Download resume error:', error);
+    res.status(500).json({ error: 'Failed to download resume' });
   }
 };

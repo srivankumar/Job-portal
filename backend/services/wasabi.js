@@ -40,6 +40,10 @@ export const uploadToWasabi = async (file, userId, jobId) => {
    GET PRESIGNED DOWNLOAD URL
 ========================= */
 export const getResumeUrl = (key) => {
+  if (!key) {
+    return null;
+  }
+
   const params = {
     Bucket: process.env.WASABI_BUCKET,
     Key: key,
@@ -47,5 +51,10 @@ export const getResumeUrl = (key) => {
     ResponseContentDisposition: "inline"
   };
 
-  return s3.getSignedUrl("getObject", params);
+  try {
+    return s3.getSignedUrl("getObject", params);
+  } catch (error) {
+    console.error("Wasabi presign error:", error);
+    return null;
+  }
 };
